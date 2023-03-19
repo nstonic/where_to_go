@@ -188,3 +188,4 @@ fabric.properties
 
 # db
 *.sqlite3
+/static/
