@@ -187,4 +187,4 @@ fabric.properties
 .idea/
 
 # db
-*.sqlite
+*.sqlite3
