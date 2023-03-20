@@ -40,7 +40,6 @@ class Command(BaseCommand):
 
                 place_images_urls = place_obj['imgs']
                 for number, image_url in enumerate(place_images_urls, start=1):
-
                     response = requests.get(image_url)
                     try:
                         response.raise_for_status()
@@ -49,9 +48,8 @@ class Command(BaseCommand):
 
                     image_file_name = parse_url(image_url).path.split('/')[-1].lower()
                     image = Image(place=place, sequential_number=number)
-                    with ContentFile(response.content) as content:
-                        try:
-                            image.file.save(image_file_name, content, save=True)
-                        except IntegrityError:
-                            continue
+                    try:
+                        image.file.save(image_file_name, ContentFile(response.content), save=True)
+                    except IntegrityError:
+                        continue
                 print(f'Done: {place_title}')
