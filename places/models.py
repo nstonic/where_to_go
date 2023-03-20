@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils.safestring import mark_safe
 
 
 class Place(models.Model):
@@ -27,8 +28,14 @@ class Image(models.Model):
         verbose_name_plural = 'Картинки'
 
     @property
-    def get_absolute_image_url(self):
+    def absolute_url(self):
         return f'{settings.MEDIA_URL}{self.file}'
+
+    @property
+    def preview(self):
+        height = min(200, self.file.height)
+        width = self.file.width * height // self.file.height
+        return mark_safe(f'<img src="{self.absolute_url}" width="{width}" height={height} />')
 
     def __str__(self):
         return f'{self.sequential_number} - {self.place}'
