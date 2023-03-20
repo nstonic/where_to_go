@@ -7,7 +7,7 @@ from places.models import Place
 
 
 def index(request):
-    places = Place.objects.iterator()
+    places = Place.objects.all().iterator()
     places_geojson = {"type": "FeatureCollection", "features": []}
     for place in places:
         places_geojson["features"].append(
