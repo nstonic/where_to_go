@@ -3,6 +3,7 @@ from urllib.parse import urljoin
 from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 
 from places.models import Place
 
@@ -21,7 +22,7 @@ def index(request):
                 "properties": {
                     "title": place.title,
                     "placeId": place.id,
-                    "detailsUrl": f"place/{place.id}"
+                    "detailsUrl": reverse(place_details, kwargs={"place_id": place.id})
                 }
             }
         )
