@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 
@@ -17,13 +18,17 @@ class Place(models.Model):
 
 
 class Image(models.Model):
-    image = models.ImageField(verbose_name='Картинка')
+    file = models.ImageField(verbose_name='Картинка')
     sequential_number = models.IntegerField(verbose_name='Порядковый номер')
     place = models.ForeignKey(Place, on_delete=models.CASCADE, related_name='images')
 
     class Meta:
         verbose_name = 'Картинка'
         verbose_name_plural = 'Картинки'
+
+    @property
+    def get_absolute_image_url(self):
+        return f'{settings.MEDIA_URL}{self.file}'
 
     def __str__(self):
         return f'{self.sequential_number} - {self.place}'
