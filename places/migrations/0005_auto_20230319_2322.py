@@ -20,15 +20,25 @@ def add_images(apps, schema_editor):
         os.makedirs(media_dir, exist_ok=True)
         with open(os.path.join(places_dir, place_file), encoding='utf8') as file:
             place_obj = json.load(file)
-            place_title = place_obj['title']
-            place_images_urls = place_obj['imgs']
-        for image_url in place_images_urls:
+        place_short_description = place_obj['description_short']
+        place_long_description = place_obj['description_long']
+        place_longitude = place_obj['coordinates']['lng']
+        place_latitude = place_obj['coordinates']['lat']
+        place_title = place_obj['title']
+        place_images_urls = place_obj['imgs']
+        place = Place.objects.create(
+            title=place_title,
+            longitude=place_longitude,
+            latitude=place_latitude,
+            description_long=place_long_description,
+            description_short=place_short_description)
+        for number, image_url in enumerate(place_images_urls, start=1):
             image_file_name = parse_url(image_url).path.split('/')[-1]
             response = requests.get(image_url)
             with open(os.path.join(media_dir, image_file_name), 'wb') as file:
                 file.write(response.content)
-            place = Place.objects.get(title=place_title)
-            Image.objects.create(place=place, image=image_file_name)
+
+            Image.objects.create(place=place, image=image_file_name, sequential_number=number)
 
 
 class Migration(migrations.Migration):
