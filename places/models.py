@@ -14,6 +14,7 @@ class Place(models.Model):
     class Meta:
         verbose_name = 'Место'
         verbose_name_plural = 'Места'
+        unique_together = [['longitude', 'latitude']]
 
     def __str__(self):
         return self.title
