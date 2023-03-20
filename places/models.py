@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.utils.safestring import mark_safe
+from tinymce.models import HTMLField
 
 
 class Place(models.Model):
@@ -8,7 +9,7 @@ class Place(models.Model):
     longitude = models.CharField(max_length=20, verbose_name='Долгота')
     latitude = models.CharField(max_length=20, verbose_name='Широта')
     description_short = models.TextField(verbose_name='Короткое описание')
-    description_long = models.TextField(verbose_name='Полное описание')
+    description_long = HTMLField(verbose_name='Полное описание')
 
     class Meta:
         verbose_name = 'Место'
