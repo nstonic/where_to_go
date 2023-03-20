@@ -20,12 +20,13 @@ class Place(models.Model):
 
 class Image(models.Model):
     file = models.ImageField(verbose_name='Картинка')
-    sequential_number = models.IntegerField(verbose_name='Порядковый номер')
+    sequential_number = models.PositiveIntegerField(verbose_name='Порядковый номер', db_index=True)
     place = models.ForeignKey(Place, on_delete=models.CASCADE, related_name='images')
 
     class Meta:
         verbose_name = 'Картинка'
         verbose_name_plural = 'Картинки'
+        ordering = ['sequential_number']
 
     @property
     def absolute_url(self):
@@ -38,4 +39,4 @@ class Image(models.Model):
         return mark_safe(f'<img src="{self.absolute_url}" width="{width}" height={height} />')
 
     def __str__(self):
-        return f'{self.sequential_number} - {self.place}'
+        return self.file.name

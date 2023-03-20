@@ -1,9 +1,10 @@
+from adminsortable2.admin import SortableStackedInline, SortableAdminBase
 from django.contrib import admin
 
 from places.models import Place, Image
 
 
-class ImagesInline(admin.TabularInline):
+class ImagesInline(SortableStackedInline):
     model = Image
     extra = 1
     fields = ('file', 'preview', 'sequential_number')
@@ -11,7 +12,7 @@ class ImagesInline(admin.TabularInline):
 
 
 @admin.register(Place)
-class PlaceAdmin(admin.ModelAdmin):
+class PlaceAdmin(SortableAdminBase, admin.ModelAdmin):
     search_fields = ("title",)
     list_display = ["title"]
     inlines = [ImagesInline]
