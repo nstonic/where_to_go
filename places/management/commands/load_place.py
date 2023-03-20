@@ -5,7 +5,6 @@ import requests
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
-from PIL import Image as PILImage
 from django.db import IntegrityError
 from urllib3.util import parse_url
 
