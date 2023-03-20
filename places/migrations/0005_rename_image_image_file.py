@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('places', '0005_auto_20230319_2322'),
+        ('places', '0004_remove_place_coordinates_place_latitude_and_more'),
     ]
 
     operations = [

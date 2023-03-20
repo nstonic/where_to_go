@@ -7,7 +7,7 @@ import tinymce.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('places', '0007_alter_image_options_alter_image_sequential_number'),
+        ('places', '0006_alter_image_options_alter_image_sequential_number'),
     ]
 
     operations = [

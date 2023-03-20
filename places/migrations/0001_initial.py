@@ -5,7 +5,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -22,6 +21,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name': 'Координаты',
                 'verbose_name_plural': 'Координаты',
+                'unique_together': {('longitude', 'latitude')}
             },
         ),
         migrations.CreateModel(
@@ -31,7 +31,8 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(max_length=128, verbose_name='Название')),
                 ('description_short', models.TextField(verbose_name='Короткое описание')),
                 ('description_long', models.TextField(verbose_name='Полное описание')),
-                ('coordinates', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='place', to='places.coordinates')),
+                ('coordinates', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='place',
+                                                     to='places.coordinates')),
             ],
             options={
                 'verbose_name': 'Место',
