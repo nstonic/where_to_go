@@ -35,6 +35,7 @@ class Command(BaseCommand):
                         description_long=place_obj['description_long'],
                         description_short=place_obj['description_short'])
                 except IntegrityError:
+                    print(f'Skiped: {place_title}')
                     continue
 
                 place_images_urls = place_obj['imgs']
