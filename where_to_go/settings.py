@@ -86,10 +86,10 @@ SESSION_COOKIE_SECURE = True
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-_default_url = env.str('DATABASE', default=f'sqlite:///{BASE_DIR}/db.sqlite3')
+_database_url = env.str('DATABASE', default=f'sqlite:///{BASE_DIR}/db.sqlite3')
 DATABASES = {
     'default': dj_database_url.config(
-        default=_default_url,
+        default=_database_url,
         conn_max_age=600,
         conn_health_checks=True,
     ),
