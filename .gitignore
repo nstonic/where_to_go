@@ -193,6 +193,4 @@ media/
 
 # places data
 where-to-go-places-master/
-
-#static
-static/
+/static/
