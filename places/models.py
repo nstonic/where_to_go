@@ -1,6 +1,4 @@
-from django.conf import settings
 from django.db import models
-from django.utils.safestring import mark_safe
 from tinymce.models import HTMLField
 
 
@@ -29,12 +27,6 @@ class Image(models.Model):
         verbose_name = 'Картинка'
         verbose_name_plural = 'Картинки'
         ordering = ['sequential_number']
-
-    @property
-    def preview(self):
-        height = min(200, self.file.height)
-        width = self.file.width * height // self.file.height
-        return mark_safe(f'<img src="{self.file.url}" width="{width}" height={height} />')
 
     def __str__(self):
         return self.file.name
