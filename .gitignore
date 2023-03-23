@@ -190,3 +190,13 @@ fabric.properties
 *.sqlite3
 media/
 .env
+
+# places data
+where-to-go-places-master/
+
+#static
+static/.gitbook/
+static/places/
+static/.editorconfig
+static/README.md
+static/SUMMARY.md
