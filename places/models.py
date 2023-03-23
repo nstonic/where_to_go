@@ -31,14 +31,10 @@ class Image(models.Model):
         ordering = ['sequential_number']
 
     @property
-    def absolute_url(self):
-        return f'{settings.MEDIA_URL}{self.file}'
-
-    @property
     def preview(self):
         height = min(200, self.file.height)
         width = self.file.width * height // self.file.height
-        return mark_safe(f'<img src="{self.absolute_url}" width="{width}" height={height} />')
+        return mark_safe(f'<img src="{self.file.url}" width="{width}" height={height} />')
 
     def __str__(self):
         return self.file.name
