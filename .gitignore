@@ -195,8 +195,4 @@ media/
 where-to-go-places-master/
 
 #static
-static/.gitbook/
-static/places/
-static/.editorconfig
-static/README.md
-static/SUMMARY.md
+static/
