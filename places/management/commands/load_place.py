@@ -29,7 +29,7 @@ class Command(BaseCommand):
             print('Ошибка записи. Объект с такими координатами уже существует в базе', file=sys.stderr)
             exit()
         else:
-            if place_created:
+            if not place_created:
                 if not input('Такое место уже есть в базе. Обновить данные? y/n: ') in ['y', 'Y']:
                     exit()
             place.description_long = place_obj['description_long']
