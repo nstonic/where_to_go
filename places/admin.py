@@ -13,10 +13,10 @@ class ImagesInline(SortableStackedInline):
     fields = ('file', 'preview', 'sequential_number')
     readonly_fields = ['preview']
 
-    def preview(self, obj):
+    def preview(self, image):
         return format_html(
             '<img src="{}" height="200" width="auto" />',
-            obj.file.url
+            image.file.url
         )
 
 
