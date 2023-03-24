@@ -7,9 +7,9 @@ from places.models import Place
 
 def index(request):
     places = Place.objects.all()
-    places_geojson = {'type': 'FeatureCollection', 'features': []}
+    features = []
     for place in places:
-        places_geojson['features'].append(
+        features.append(
             {
                 'type': 'Feature',
                 'geometry': {
@@ -19,16 +19,24 @@ def index(request):
                 'properties': {
                     'title': place.title,
                     'placeId': place.id,
-                    'detailsUrl': reverse(place_details, kwargs={'place_id': place.id})
+                    'detailsUrl': reverse(
+                        place_details, kwargs={'place_id': place.id}
+                    )
                 }
             }
         )
-    return render(request, 'index.html', context={'places_geojson': places_geojson})
+    places = {'type': 'FeatureCollection', 'features': features}
+
+    return render(
+        request,
+        'index.html',
+        context={'places_geojson': places}
+    )
 
 
 def place_details(request, place_id):
     place = get_object_or_404(Place, id=place_id)
-    data = {
+    serialized_place = {
         'title': place.title,
         'imgs': [image.file.url for image in place.images.all()],
         'description_short': place.description_short,
@@ -38,4 +46,7 @@ def place_details(request, place_id):
             'lat': place.latitude
         }
     }
-    return JsonResponse(data, json_dumps_params={'ensure_ascii': False, 'indent': 4})
+    return JsonResponse(
+        serialized_place,
+        json_dumps_params={'ensure_ascii': False, 'indent': 4}
+    )
