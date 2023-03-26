@@ -23,7 +23,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        place_url = options.get('place_url')
+        place_url = options['place_url']
         force_replace = options['force_replace']
         validator = URLValidator()
         try:
@@ -38,11 +38,7 @@ class Command(BaseCommand):
 
         place = create_place(place_obj, force_replace)
         if img_urls := place_obj.get('imgs', []):
-            add_images_to_place(
-                img_urls=img_urls,
-                place=place,
-                force_replace=force_replace
-            )
+            add_images_to_place(img_urls, place, force_replace)
 
 
 def create_place(place_obj: dict, force_replace: bool) -> Place:
