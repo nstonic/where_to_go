@@ -1,13 +1,13 @@
 import json
 import sys
 import textwrap
+from hashlib import md5
 
 import requests
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from django.core.validators import URLValidator
-from urllib3.util import parse_url
 
 from places.models import Place, Image
 
@@ -86,7 +86,7 @@ def add_images_to_place(img_urls: list, place: Place):
             )
             continue
 
-        image_file_name = parse_url(image_url).path.split('/')[-1]
+        image_file_name = md5(response.content).hexdigest()
         content_file = ContentFile(response.content, name=image_file_name)
         Image.objects.create(
             place=place,
