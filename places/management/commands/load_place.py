@@ -15,9 +15,16 @@ from places.models import Place, Image
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('place_url', type=str)
+        parser.add_argument(
+            '--force_replace',
+            type=bool,
+            default=False,
+            help='Принудительно заменить место при конфликте'
+        )
 
     def handle(self, *args, **options):
         place_url = options.get('place_url')
+        force_replace = options['force_replace']
         validator = URLValidator()
         try:
             validator(place_url)
@@ -28,15 +35,17 @@ class Command(BaseCommand):
         response = requests.get(place_url)
         response.raise_for_status()
         place_obj = json.loads(response.content)
-        place = create_place(place_obj)
+
+        place = create_place(place_obj, force_replace)
         if img_urls := place_obj.get('imgs', []):
             add_images_to_place(
                 img_urls=img_urls,
-                place=place
+                place=place,
+                force_replace=force_replace
             )
 
 
-def create_place(place_obj: dict) -> Place:
+def create_place(place_obj: dict, force_replace: bool) -> Place:
     try:
         place, place_created = Place.objects.get_or_create(
             longitude=place_obj['coordinates']['lng'],
@@ -46,7 +55,7 @@ def create_place(place_obj: dict) -> Place:
         print('Не указаны координаты', file=sys.stderr)
         exit()
     else:
-        if not place_created:
+        if not force_replace and not place_created:
             if not input(textwrap.dedent("""
             Место с такими координатами уже есть в базе.
             Обновить данные? y/n: """)) in ['y', 'Y']:
@@ -67,10 +76,10 @@ def create_place(place_obj: dict) -> Place:
         return place
 
 
-def add_images_to_place(img_urls: list, place: Place):
+def add_images_to_place(img_urls: list, place: Place, force_replace: bool):
     numbering_with = place.images.count() + 1
     if numbering_with > 1:
-        if input(textwrap.dedent("""
+        if force_replace or input(textwrap.dedent("""
         У данного места уже есть изображения.
         Удалить их перед загрузкой новых? y/n: """)) in ['y', 'Y']:
             place.images.all().delete()
