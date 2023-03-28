@@ -8,13 +8,11 @@ class Place(models.Model):
     latitude = models.FloatField(max_length=20, verbose_name='Широта')
     description_short = models.TextField(
         verbose_name='Короткое описание',
-        blank=True,
-        default='Описание не указано'
+        blank=True
     )
     description_long = HTMLField(
         verbose_name='Полное описание',
-        blank=True,
-        default='Описание не указано'
+        blank=True
     )
 
     class Meta:
