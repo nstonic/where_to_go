@@ -18,8 +18,8 @@ class Command(BaseCommand):
         parser.add_argument(
             '--replace_images',
             type=bool,
-            default=False,
-            help='Принудительно заменить место при конфликте'
+            action='store_true',
+            help='При загрузке новых фотографий автоматически удалить из данного места старые'
         )
 
     def handle(self, *args, **options):
@@ -36,12 +36,12 @@ class Command(BaseCommand):
         response.raise_for_status()
         place_obj = json.loads(response.content)
 
-        place = create_place(place_obj)
+        place = get_or_create_place(place_obj)
         if img_urls := place_obj.get('imgs', []):
             add_images_to_place(img_urls, place, replace_images)
 
 
-def create_place(place_obj: dict) -> Place:
+def get_or_create_place(place_obj: dict) -> Place:
     try:
         place, place_created = Place.objects.get_or_create(
             longitude=place_obj['coordinates']['lng'],
