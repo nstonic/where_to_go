@@ -56,18 +56,13 @@ def create_place(place_obj: dict, force_replace: bool) -> Place:
             Место с такими координатами уже есть в базе.
             Обновить данные? y/n: """)) in ['y', 'Y']:
                 exit()
-        place.title = place_obj.get(
-            'title',
-            'Название не указано'
-        )
-        place.description_long = place_obj.get(
-            'description_long',
-            'Описание не указано'
-        )
-        place.description_short = place_obj.get(
-            'description_short',
-            'Описание не указано'
-        )
+        try:
+            place.title = place_obj['title']
+        except KeyError:
+            print('Не указано название', file=sys.stderr)
+            exit()
+        place.description_long = place_obj.get('description_long')
+        place.description_short = place_obj.get('description_short')
         place.save()
         return place
 
