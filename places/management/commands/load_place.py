@@ -17,7 +17,6 @@ class Command(BaseCommand):
         parser.add_argument('place_url', type=str)
         parser.add_argument(
             '--replace_images',
-            type=bool,
             action='store_true',
             help='При загрузке новых фотографий автоматически удалить из данного места старые'
         )
