@@ -16,15 +16,14 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('place_url', type=str)
         parser.add_argument(
-            '--force_replace',
-            type=bool,
-            default=False,
-            help='Принудительно заменить место при конфликте'
+            '--replace_images',
+            action='store_true',
+            help='При загрузке новых фотографий автоматически удалить из данного места старые'
         )
 
     def handle(self, *args, **options):
         place_url = options['place_url']
-        force_replace = options['force_replace']
+        replace_images = options['replace_images']
         validator = URLValidator()
         try:
             validator(place_url)
@@ -36,46 +35,33 @@ class Command(BaseCommand):
         response.raise_for_status()
         place_obj = json.loads(response.content)
 
-        place = create_place(place_obj, force_replace)
+        place = get_or_create_place(place_obj)
         if img_urls := place_obj.get('imgs', []):
-            add_images_to_place(img_urls, place, force_replace)
+            add_images_to_place(img_urls, place, replace_images)
 
 
-def create_place(place_obj: dict, force_replace: bool) -> Place:
+def get_or_create_place(place_obj: dict) -> Place:
     try:
         place, place_created = Place.objects.get_or_create(
             longitude=place_obj['coordinates']['lng'],
-            latitude=place_obj['coordinates']['lat']
+            latitude=place_obj['coordinates']['lat'],
+            defaults={
+                'title': place_obj['title'],
+                'description_long': place_obj.get('description_long'),
+                'description_short': place_obj.get('description_short')
+            }
         )
     except KeyError:
-        print('Не указаны координаты', file=sys.stderr)
+        print('Название и координаты обязательны к заполнению', file=sys.stderr)
         exit()
     else:
-        if not force_replace and not place_created:
-            if not input(textwrap.dedent("""
-            Место с такими координатами уже есть в базе.
-            Обновить данные? y/n: """)) in ['y', 'Y']:
-                exit()
-        place.title = place_obj.get(
-            'title',
-            'Название не указано'
-        )
-        place.description_long = place_obj.get(
-            'description_long',
-            'Описание не указано'
-        )
-        place.description_short = place_obj.get(
-            'description_short',
-            'Описание не указано'
-        )
-        place.save()
         return place
 
 
-def add_images_to_place(img_urls: list, place: Place, force_replace: bool):
+def add_images_to_place(img_urls: list, place: Place, replace_images: bool):
     numbering_with = place.images.count() + 1
     if numbering_with > 1:
-        if force_replace or input(textwrap.dedent("""
+        if replace_images or input(textwrap.dedent("""
         У данного места уже есть изображения.
         Удалить их перед загрузкой новых? y/n: """)) in ['y', 'Y']:
             place.images.all().delete()
