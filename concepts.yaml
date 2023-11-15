@@ -1,9 +1,9 @@
 ПО сервиса Where-to-go: !concept
   определение: |
     Программное обеспечение, необходимое для работы сервиса Where-to-go. Включает бек-енд и фронтенд части.
-  Web сайт: !example |
+  С web интерфейсом: !example |
     ПО обеспечивает работу web-сайта.
-  Бот в Telegram: !exclusion 
+  Бот в Telegram: !extention 
 
 
 Local-окружение: !concept
